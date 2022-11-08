@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\NoteController;
+use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,8 +19,23 @@ Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+Route::middleware(['auth'])->group( function(){
+
+    Route::get('/dashboard', [NoteController::class, 'dashboardPage'])
+        ->name('dashboard');
+
+    Route::post('criar_anotacao',[NoteController::class, 'create'])
+        ->name('create.note');
+
+    Route::post('editar_anotacao',[NoteController::class, 'update'])
+        ->name('update.note');
+
+    Route::post('excluir_anotacao',[NoteController::class, 'delete'])
+        ->name('delete.note');
+
+});
+
+
+
 
 require __DIR__.'/auth.php';
